@@ -1,0 +1,334 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  EDITOR
+}
+
+enum PublishStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum EventType {
+  WEEKLY
+  SPECIAL
+}
+
+enum CampaignType {
+  POPUP
+  FLOATING_BAR
+}
+
+enum CampaignTrigger {
+  DELAY
+  SCROLL
+  EXIT_INTENT
+}
+
+enum FormFieldType {
+  TEXT
+  TEXTAREA
+  EMAIL
+  PHONE
+  NUMBER
+  DROPDOWN
+  CHECKBOX
+  RADIO
+  DATE
+  TIME
+  HIDDEN
+  CONSENT
+}
+
+model User {
+  id           String      @id @default(cuid())
+  email        String      @unique
+  passwordHash String
+  role         UserRole    @default(EDITOR)
+  isActive     Boolean     @default(true)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  sessions     Session[]
+}
+
+model Session {
+  id         String   @id @default(cuid())
+  token      String   @unique
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  ipAddress  String?
+  userAgent  String?
+}
+
+model ContentPage {
+  id              String        @id @default(cuid())
+  title           String
+  slug            String        @unique
+  seoTitle        String?
+  metaDescription String?
+  ogImage         String?
+  canonicalUrl    String?
+  indexable       Boolean       @default(true)
+  jsonLd          Json?
+  content         Json?
+  status          PublishStatus @default(DRAFT)
+  publishedAt     DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  locations       Location[]
+  revisions       ContentRevision[]
+}
+
+model ContentRevision {
+  id        String      @id @default(cuid())
+  pageId    String
+  page      ContentPage @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  reason    String      @default("snapshot")
+  content   Json
+  createdAt DateTime    @default(now())
+
+  @@index([pageId, createdAt])
+}
+
+model Location {
+  id              String        @id @default(cuid())
+  slug            String        @unique
+  name            String
+  description     String?
+  addressLine1    String?
+  addressLine2    String?
+  postalCode      String?
+  city            String?
+  country         String?
+  latitude        Float?
+  longitude       Float?
+  websiteUrl      String?
+  phone           String?
+  email           String?
+  openingHours    Json?
+  images          Json?
+  seoTitle        String?
+  metaDescription String?
+  ogImage         String?
+  canonicalUrl    String?
+  indexable       Boolean       @default(true)
+  jsonLd          Json?
+  status          PublishStatus @default(PUBLISHED)
+  pageId          String?
+  page            ContentPage?  @relation(fields: [pageId], references: [id], onDelete: SetNull)
+  weeklyEvents    WeeklyEventLocation[]
+  specialEvents   SpecialEventLocation[]
+  deals           Deal[]
+  campaigns       Campaign[]
+  forms           Form[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+model WeeklyEvent {
+  id               String        @id @default(cuid())
+  title            String
+  slug             String        @unique
+  descriptionShort String?
+  descriptionLong  String?
+  weekdays         Json
+  startTime        String?
+  endTime          String?
+  image            String?
+  ctaLabel         String?
+  ctaUrl           String?
+  status           PublishStatus @default(DRAFT)
+  sortOrder        Int           @default(100)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  locations        WeeklyEventLocation[]
+}
+
+model WeeklyEventLocation {
+  weeklyEventId String
+  locationId    String
+  weeklyEvent   WeeklyEvent @relation(fields: [weeklyEventId], references: [id], onDelete: Cascade)
+  location      Location    @relation(fields: [locationId], references: [id], onDelete: Cascade)
+
+  @@id([weeklyEventId, locationId])
+}
+
+model SpecialEvent {
+  id              String        @id @default(cuid())
+  title           String
+  slug            String        @unique
+  startDateTime   DateTime
+  endDateTime     DateTime?
+  description     String?
+  image           String?
+  ctaLabel        String?
+  ctaUrl          String?
+  status          PublishStatus @default(DRAFT)
+  highlight       Boolean       @default(false)
+  priority        Int           @default(0)
+  seoTitle        String?
+  metaDescription String?
+  ogImage         String?
+  canonicalUrl    String?
+  indexable       Boolean       @default(true)
+  jsonLd          Json?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  locations       SpecialEventLocation[]
+}
+
+model SpecialEventLocation {
+  specialEventId String
+  locationId     String
+  specialEvent   SpecialEvent @relation(fields: [specialEventId], references: [id], onDelete: Cascade)
+  location       Location     @relation(fields: [locationId], references: [id], onDelete: Cascade)
+
+  @@id([specialEventId, locationId])
+}
+
+model Form {
+  id                 String        @id @default(cuid())
+  name               String
+  slug               String        @unique
+  status             PublishStatus @default(DRAFT)
+  targetPageSlugs    Json?
+  trackingEventName  String?
+  redirectUrl        String?
+  recipientEmail     String?
+  webhookUrl         String?
+  zendeskMode        String?
+  prevoEnabled       Boolean       @default(false)
+  prevoListTag       String?
+  useMultiStep       Boolean       @default(false)
+  locationId         String?
+  location           Location?     @relation(fields: [locationId], references: [id], onDelete: SetNull)
+  fields             FormField[]
+  submissions        FormSubmission[]
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+}
+
+model FormField {
+  id              String        @id @default(cuid())
+  formId          String
+  form            Form          @relation(fields: [formId], references: [id], onDelete: Cascade)
+  type            FormFieldType
+  name            String
+  label           String
+  placeholder     String?
+  helpText        String?
+  options         Json?
+  required        Boolean       @default(false)
+  regexPattern    String?
+  minValue        Float?
+  maxValue        Float?
+  conditionalJson Json?
+  sortOrder       Int           @default(100)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([formId, sortOrder])
+}
+
+model FormSubmission {
+  id             String   @id @default(cuid())
+  formId         String
+  form           Form     @relation(fields: [formId], references: [id], onDelete: Cascade)
+  payload        Json
+  utmData        Json?
+  consentFlags   Json?
+  status         String   @default("new")
+  ipAddress      String?
+  userAgent      String?
+  sourceUrl      String?
+  refererUrl     String?
+  integrationLog Json?
+  createdAt      DateTime @default(now())
+
+  @@index([formId, createdAt])
+}
+
+model Deal {
+  id                  String        @id @default(cuid())
+  title               String
+  label               String?
+  shortText           String?
+  ctaLabel            String?
+  ctaUrl              String?
+  image               String?
+  status              PublishStatus @default(DRAFT)
+  startAt             DateTime?
+  endAt               DateTime?
+  showOn              Json?
+  deviceTargeting     Json?
+  priority            Int           @default(0)
+  trackingEventNames  Json?
+  locationId          String?
+  location            Location?     @relation(fields: [locationId], references: [id], onDelete: SetNull)
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+}
+
+model Campaign {
+  id               String          @id @default(cuid())
+  type             CampaignType
+  headline         String
+  text             String?
+  image            String?
+  ctaLabel         String?
+  ctaUrl           String?
+  pageTargeting    Json?
+  deviceTargeting  Json?
+  scheduleJson     Json?
+  frequencyJson    Json?
+  trigger          CampaignTrigger @default(DELAY)
+  triggerValue     Int?
+  trackingEvents   Json?
+  status           PublishStatus   @default(DRAFT)
+  locationId       String?
+  location         Location?       @relation(fields: [locationId], references: [id], onDelete: SetNull)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+}
+
+model RedirectRule {
+  id          String   @id @default(cuid())
+  fromPath    String   @unique
+  toPath      String
+  statusCode  Int      @default(301)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model TrackingEvent {
+  id          String   @id @default(cuid())
+  name        String
+  category    String
+  payload     Json?
+  consent     String?
+  sessionId   String?
+  userId      String?
+  createdAt   DateTime @default(now())
+
+  @@index([name, createdAt])
+}
+
+model SiteSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     Json
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+}

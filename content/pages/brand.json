@@ -1,0 +1,11 @@
+{
+  "title": "Bohnigen | Standorte",
+  "subtitle": "Wähle deinen Standort und entdecke die jeweilige Seite.",
+  "logoText": "BOHNIGEN",
+  "links": [
+    { "label": "Koblenz", "href": "/locations/koblenz" },
+    { "label": "Oberrad", "href": "/locations/oberrad" },
+    { "label": "Trier", "href": "/locations/trier" },
+    { "label": "Hagen", "href": "/locations/hagen" }
+  ]
+}

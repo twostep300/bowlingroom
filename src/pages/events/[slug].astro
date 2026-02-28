@@ -1,0 +1,72 @@
+---
+import { db } from '@/lib/db';
+
+const { slug } = Astro.params;
+if (!slug) return Astro.redirect('/');
+
+const event = await db.specialEvent.findUnique({
+  where: { slug },
+  include: {
+    locations: {
+      include: { location: true }
+    }
+  }
+});
+
+if (!event || event.status !== 'PUBLISHED') {
+  return new Response('Not Found', { status: 404 });
+}
+
+const location = event.locations[0]?.location;
+const pageTitle = event.seoTitle || event.title;
+const pageDescription = event.metaDescription || event.description || 'Event bei Bowlingroom';
+const canonical = event.canonicalUrl || new URL(`/events/${event.slug}`, Astro.site || Astro.url.origin).toString();
+
+const eventJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Event',
+  name: event.title,
+  description: event.description || undefined,
+  startDate: event.startDateTime.toISOString(),
+  endDate: event.endDateTime?.toISOString(),
+  eventStatus: 'https://schema.org/EventScheduled',
+  eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+  image: event.ogImage || event.image || undefined,
+  location: location
+    ? {
+        '@type': 'Place',
+        name: location.name,
+        address: [location.addressLine1, location.postalCode, location.city].filter(Boolean).join(', ')
+      }
+    : undefined,
+  organizer: {
+    '@type': 'Organization',
+    name: 'Bowlingroom'
+  }
+};
+---
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <link rel="canonical" href={canonical} />
+    {event.ogImage && <meta property="og:image" content={event.ogImage} />}
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(eventJsonLd)} />
+  </head>
+  <body>
+    <main>
+      <h1>{event.title}</h1>
+      <p>{event.description}</p>
+      <p>Start: {event.startDateTime.toLocaleString('de-DE')}</p>
+      {event.endDateTime && <p>Ende: {event.endDateTime.toLocaleString('de-DE')}</p>}
+      {event.ctaUrl && (
+        <p>
+          <a href={event.ctaUrl}>{event.ctaLabel || 'Jetzt reservieren'}</a>
+        </p>
+      )}
+    </main>
+  </body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "name": "bowlingroom-cms-payload",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "scripts": {
+    "predev": "payload generate:importmap --config payload.config.js",
+    "dev": "next dev -H 127.0.0.1 -p 4000",
+    "prebuild": "payload generate:importmap --config payload.config.js && payload generate:types --config payload.config.js",
+    "build": "next build",
+    "start": "next start -H 127.0.0.1 -p 4000",
+    "import:legacy-pages": "node ./scripts/import-legacy-pages.mjs",
+    "generate:types": "payload generate:types --config payload.config.js",
+    "generate:importmap": "payload generate:importmap --config payload.config.js"
+  },
+  "dependencies": {
+    "@payloadcms/next": "^3.77.0",
+    "@payloadcms/db-postgres": "^3.0.0",
+    "dotenv": "^16.4.7",
+    "next": "15.4.11",
+    "payload": "^3.0.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  }
+}

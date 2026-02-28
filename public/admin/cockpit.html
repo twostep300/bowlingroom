@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bowlingroom Admin Cockpit</title>
+  <style>
+    :root { color-scheme: dark; --bg:#0b0d12; --panel:#151922; --line:#2a3140; --text:#f3f4f6; --muted:#94a3b8; --brand:#ff3e00; }
+    *{box-sizing:border-box} body{margin:0;font-family:ui-sans-serif,system-ui;background:var(--bg);color:var(--text)}
+    .layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+    .side{border-right:1px solid var(--line);background:var(--panel);padding:14px;display:flex;flex-direction:column;gap:10px}
+    .logo{font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+    .menu-group{margin-bottom:12px}
+    .group-title{font-size:11px;color:#93a4bf;text-transform:uppercase;letter-spacing:.12em;font-weight:800;margin:0 0 6px 2px}
+    .menu button{display:block;width:100%;text-align:left;padding:10px;border:1px solid #30384a;background:#1a2030;color:#e2e8f0;border-radius:8px;cursor:pointer;margin-bottom:8px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+    .menu button.active{border-color:var(--brand);color:var(--brand);background:rgba(255,62,0,.08)}
+    .main{padding:14px;display:grid;grid-template-rows:auto auto 1fr;gap:10px;min-height:100vh}
+    .top{display:flex;justify-content:space-between;gap:8px;align-items:center;border:1px solid var(--line);padding:10px;border-radius:10px;background:#121722}
+    .hint{font-size:12px;color:var(--muted)}
+    .card{border:1px solid var(--line);border-radius:10px;padding:12px;background:#121722}
+    .grid{display:grid;gap:10px}
+    .two{grid-template-columns:1fr 1fr}
+    .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    input,select,textarea,button{background:#1b2232;color:var(--text);border:1px solid #374055;border-radius:8px;padding:8px 10px;font-size:13px}
+    textarea{width:100%;min-height:180px;resize:vertical}
+    button{cursor:pointer}
+    button.primary{background:var(--brand);border-color:var(--brand);font-weight:700}
+    .split{display:grid;grid-template-columns:300px 1fr;gap:10px;min-height:0}
+    .list{display:grid;gap:8px;max-height:65vh;overflow:auto}
+    .item{padding:10px;border:1px solid #344059;border-radius:8px;background:#181f2d;cursor:pointer}
+    .item.active{border-color:var(--brand);background:rgba(255,62,0,.08)}
+    .hidden{display:none}
+    .work{display:grid;grid-template-columns:minmax(520px,1fr) 42%;gap:10px;min-height:0}
+    .work.preview-hidden{grid-template-columns:1fr}
+    .work.preview-hidden .previewWrap{display:none}
+    .previewWrap{border:1px solid var(--line);border-radius:10px;background:#10151f;display:grid;grid-template-rows:auto 1fr;min-height:0}
+    .previewHead{padding:10px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:8px}
+    .previewFrame{width:100%;height:100%;border:0;background:#000;border-radius:0 0 10px 10px}
+    .status{font-size:12px;color:#a3e635}
+    .err{color:#fda4af}
+    #loginWrap{position:fixed;inset:0;background:rgba(3,5,8,.92);display:flex;align-items:center;justify-content:center;z-index:90}
+    #loginCard{width:min(420px,92vw);border:1px solid var(--line);background:#10151f;border-radius:12px;padding:16px}
+  </style>
+</head>
+<body>
+  <div id="loginWrap" class="hidden" style="display:none !important;">
+    <div id="loginCard" class="grid">
+      <div class="logo">Admin Login</div>
+      <input id="loginEmail" type="email" placeholder="E-Mail" value="admin@bowlingroom.local" autocomplete="off" autocapitalize="none" spellcheck="false" />
+      <input id="loginPassword" type="password" placeholder="Passwort" value="ChangeMe123!" autocomplete="new-password" spellcheck="false" />
+      <label class="hint"><input id="showPasswordToggle" type="checkbox" /> Passwort anzeigen</label>
+      <div class="hint">Default Login: <b>admin@bowlingroom.local</b> / <b>ChangeMe123!</b></div>
+      <button id="loginBtn" class="primary">Einloggen</button>
+      <div id="loginStatus" class="hint"></div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <aside class="side">
+      <div class="logo">CMS Cockpit</div>
+      <div class="hint">Strukturiert nach Modulen</div>
+      <div class="menu" id="menu"></div>
+      <div class="hint">Einzelner Editor (Cockpit)</div>
+    </aside>
+    <main class="main">
+      <div class="top">
+        <div class="row">
+          <div class="hint">Seite:</div>
+          <select id="pageSelect"></select>
+          <a id="openPage" href="#" target="_blank" class="hint">Seite öffnen</a>
+        </div>
+        <div class="row">
+          <button id="togglePreviewBtn">Live Vorschau ausblenden</button>
+          <button id="reloadBtn">Neu laden</button>
+          <button id="logoutBtn">Logout</button>
+        </div>
+      </div>
+      <div id="status" class="status"></div>
+      <section class="work">
+        <section id="content"></section>
+        <aside class="previewWrap">
+          <div class="previewHead">
+            <div class="hint">Live Vorschau</div>
+            <div class="row">
+              <button id="previewReloadBtn">Preview neu laden</button>
+            </div>
+          </div>
+          <iframe id="previewFrame" class="previewFrame" title="Live Preview"></iframe>
+        </aside>
+      </section>
+    </main>
+  </div>
+
+  <script src="/admin/cockpit.js?v=20260221-11"></script>
+</body>
+</html>
