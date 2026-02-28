@@ -1,5 +1,8 @@
 node_modules
 .astro
+.next
+apps/cms/.next
+apps/cms/node_modules
 dist
 .env
 .env.*
