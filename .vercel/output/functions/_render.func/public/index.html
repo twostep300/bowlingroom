@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design</title>
+  <script src="https://cdn.tailwindcss.com/"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <style>
+* { box-sizing: border-box; } body {margin: 0;}:root{--neon-red:#FF3E00;--dark-bg:#0A0A0A;}body{font-family:Satoshi, sans-serif;background-color:var(--dark-bg);color:white;}.font-display, h1, h2, h3, h4{font-family:"Cabinet Grotesk", sans-serif;font-weight:900;}.neon-glow:hover{text-shadow:0 0 10px var(--neon-red), 0 0 20px var(--neon-red);}.mask-gradient{mask-image:linear-gradient(black 50%, transparent 100%);}.skew-hover:hover{transform:skew(-2deg) scale(1.02);}::-webkit-scrollbar{width:8px;}::-webkit-scrollbar-track{background-image:initial;background-position-x:initial;background-position-y:initial;background-size:initial;background-repeat:initial;background-attachment:initial;background-origin:initial;background-clip:initial;background-color:rgb(10, 10, 10);}::-webkit-scrollbar-thumb{border-top-left-radius:4px;border-top-right-radius:4px;border-bottom-right-radius:4px;border-bottom-left-radius:4px;}@keyframes marquee{0%{transform:translateX(0px);}100%{transform:translateX(-50%);}}
+  </style>
+
+<meta name="preview-version" content="4c590112-3a39-44c2-b5cd-8fa2989a1951" />
+<meta name="preview-timestamp" content="2026-02-20T20:46:09.314Z" />
+
+<style>
+  html::-webkit-scrollbar, body::-webkit-scrollbar, *::-webkit-scrollbar {
+    display: none !important; width: 0 !important; height: 0 !important;
+  }
+  html, body, * {
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
+  }
+</style>
+<style>
+          body:not(.sd-ready) { opacity: 0 !important; }
+          body.sd-ready { opacity: 1 !important; transition: opacity 0.1s ease-in; }
+          sd-component { display: block; }
+        </style>
+
+<script type="module">
+  (function() {
+    document.addEventListener('wheel', function(e) {
+      if (e.ctrlKey) e.preventDefault();
+    }, { passive: false });
+  })();
+</script>
+<script type="module">
+    // SuperDesign Runtime
+    console.log('[SuperDesign] Preview loaded for versionId:', "4c590112-3a39-44c2-b5cd-8fa2989a1951");
+
+    window.__SUPERDESIGN_PREVIEW__ = {
+      versionId: "4c590112-3a39-44c2-b5cd-8fa2989a1951",
+      timestamp: "2026-02-20T20:46:09.314Z",
+      _modernScreenshotModule: null,
+
+      sendMessage: function(type, data) {
+        if (window.parent) {
+          window.parent.postMessage({
+            source: 'superdesign-preview',
+            type: type,
+            data: data,
+            versionId: this.versionId
+          }, '*');
+        }
+      },
+
+      ready: function() {
+        this.sendMessage('ready', { timestamp: Date.now() });
+      },
+
+      
+      _captureScreenshotInternal: async function() {
+        if (!this._modernScreenshotModule) {
+          console.log('[SuperDesign] Loading modern-screenshot library...');
+          this._modernScreenshotModule = await import('https://esm.sh/modern-screenshot@4.6.6');
+        }
+        var modernScreenshot = this._modernScreenshotModule;
+        if (!modernScreenshot || !modernScreenshot.domToCanvas) {
+          throw new Error('modern-screenshot library not loaded');
+        }
+
+        var scrollX = window.scrollX || window.pageXOffset;
+        var scrollY = window.scrollY || window.pageYOffset;
+        var viewportWidth = window.innerWidth;
+        var viewportHeight = window.innerHeight;
+        var documentWidth = Math.max(
+          document.documentElement.scrollWidth,
+          document.documentElement.offsetWidth,
+          document.documentElement.clientWidth,
+          document.body.scrollWidth,
+          document.body.offsetWidth
+        );
+        var documentHeight = Math.max(
+          document.documentElement.scrollHeight,
+          document.documentElement.offsetHeight,
+          document.documentElement.clientHeight,
+          document.body.scrollHeight,
+          document.body.offsetHeight
+        );
+
+        var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        var pixelRatio = isMobile ? 1 : (window.devicePixelRatio || 1);
+
+        var dataUrl;
+
+        if (isMobile) {
+          var wrapper = document.createElement('div');
+          wrapper.style.cssText = 'position:fixed;top:0;left:0;width:' + viewportWidth + 'px;height:' + viewportHeight + 'px;overflow:hidden;z-index:999999;pointer-events:none;';
+          var clone = document.body.cloneNode(true);
+          clone.style.cssText = 'position:absolute;top:' + (-scrollY) + 'px;left:' + (-scrollX) + 'px;margin:0;width:' + documentWidth + 'px;';
+          wrapper.appendChild(clone);
+          document.body.appendChild(wrapper);
+          try {
+            var viewportCanvas = await modernScreenshot.domToCanvas(wrapper, {
+              scale: 1, backgroundColor: '#ffffff',
+              width: viewportWidth, height: viewportHeight,
+            });
+            dataUrl = viewportCanvas.toDataURL('image/png', 0.5);
+          } finally {
+            document.body.removeChild(wrapper);
+          }
+        } else {
+          var fullCanvas = await modernScreenshot.domToCanvas(document.documentElement, {
+            scale: pixelRatio, backgroundColor: '#ffffff',
+            width: documentWidth, height: documentHeight,
+          });
+          var viewportCanvas = document.createElement('canvas');
+          viewportCanvas.width = viewportWidth * pixelRatio;
+          viewportCanvas.height = viewportHeight * pixelRatio;
+          var ctx = viewportCanvas.getContext('2d');
+          if (!ctx) throw new Error('Failed to get canvas context');
+          ctx.drawImage(
+            fullCanvas,
+            scrollX * pixelRatio, scrollY * pixelRatio,
+            viewportWidth * pixelRatio, viewportHeight * pixelRatio,
+            0, 0, viewportWidth * pixelRatio, viewportHeight * pixelRatio
+          );
+          dataUrl = viewportCanvas.toDataURL('image/png', 1.0);
+        }
+
+        if (!dataUrl || !dataUrl.startsWith('data:image/png;base64,') || dataUrl.length < 100) {
+          throw new Error('Invalid screenshot data');
+        }
+
+        return {
+          dataUrl: dataUrl,
+          viewportWidth: viewportWidth,
+          viewportHeight: viewportHeight,
+          pixelRatio: pixelRatio
+        };
+      },
+
+      autoCapture: async function() {
+        if (window === window.parent) return;
+        try {
+          var result = await this._captureScreenshotInternal();
+          this.sendMessage('auto-screenshot', {
+            dataUrl: result.dataUrl,
+            timestamp: Date.now(),
+            viewportWidth: result.viewportWidth,
+            viewportHeight: result.viewportHeight,
+            pixelRatio: result.pixelRatio,
+          });
+        } catch (error) {
+          console.error('[SuperDesign] Auto-capture failed:', error);
+        }
+      },
+
+      captureScreenshot: async function(requestId, autoCaptureId) {
+        try {
+          this._currentRequestId = requestId;
+          this._currentAutoCaptureId = autoCaptureId;
+          var result = await this._captureScreenshotInternal();
+          this.sendMessage('screenshot-captured', {
+            dataUrl: result.dataUrl,
+            timestamp: Date.now(),
+            viewportWidth: result.viewportWidth,
+            viewportHeight: result.viewportHeight,
+            pixelRatio: result.pixelRatio,
+            requestId: this._currentRequestId,
+            autoCaptureId: this._currentAutoCaptureId
+          });
+          return result.dataUrl;
+        } catch (error) {
+          console.error('[SuperDesign] Screenshot capture failed:', error);
+          this.sendMessage('screenshot-error', {
+            error: error.message || String(error),
+            timestamp: Date.now(),
+            requestId: this._currentRequestId,
+            autoCaptureId: this._currentAutoCaptureId
+          });
+          throw error;
+        }
+      }
+  
+    };
+
+    
+    // Font loading helpers
+    window.__SUPERDESIGN_PREVIEW__.loadedFonts = new Set();
+    window.__SUPERDESIGN_PREVIEW__.loadGoogleFont = function(fontFamily) {
+      if (!fontFamily || this.loadedFonts.has(fontFamily)) return;
+      if (fontFamily.startsWith('Custom-')) return;
+
+      var systemFonts = ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI',
+        'Roboto', 'Helvetica', 'Arial', 'sans-serif', 'Georgia', 'Times New Roman',
+        'Times', 'serif', 'Menlo', 'Monaco', 'Consolas', 'Courier New', 'monospace'];
+      if (systemFonts.some(function(sf) { return fontFamily.toLowerCase().includes(sf.toLowerCase()); })) return;
+
+      if (!document.querySelector('link[href*="fonts.googleapis.com"]')) {
+        var preconnect1 = document.createElement('link');
+        preconnect1.rel = 'preconnect';
+        preconnect1.href = 'https://fonts.googleapis.com';
+        document.head.appendChild(preconnect1);
+        var preconnect2 = document.createElement('link');
+        preconnect2.rel = 'preconnect';
+        preconnect2.href = 'https://fonts.gstatic.com';
+        preconnect2.crossOrigin = 'anonymous';
+        document.head.appendChild(preconnect2);
+      }
+
+      var linkId = 'google-font-' + fontFamily.replace(/\\s+/g, '-').toLowerCase();
+      if (!document.getElementById(linkId)) {
+        var link = document.createElement('link');
+        link.id = linkId;
+        link.rel = 'stylesheet';
+        link.href = 'https://fonts.googleapis.com/css2?family=' + encodeURIComponent(fontFamily) + ':wght@400;500;600;700&display=swap';
+        link.onerror = function() { console.error('[SuperDesign] Failed to load Google Font:', fontFamily); };
+        document.head.appendChild(link);
+      }
+      this.loadedFonts.add(fontFamily);
+    };
+
+    window.__SUPERDESIGN_PREVIEW__.loadedCustomFonts = new Set();
+    window.__SUPERDESIGN_PREVIEW__.loadCustomFont = function(fontInfo) {
+      if (!fontInfo || !fontInfo.family || !fontInfo.url) return;
+      if (this.loadedCustomFonts.has(fontInfo.family)) return;
+      var styleId = 'custom-font-' + fontInfo.family.replace(/[^a-zA-Z0-9]/g, '-');
+      if (document.getElementById(styleId)) return;
+      var style = document.createElement('style');
+      style.id = styleId;
+      style.textContent = '@font-face { ' +
+        'font-family: "' + fontInfo.family + '"; ' +
+        'src: url("' + fontInfo.url + '") format("' + (fontInfo.format || 'woff2') + '"); ' +
+        'font-weight: 100 900; font-style: normal; font-display: swap; }';
+      document.head.appendChild(style);
+      this.loadedCustomFonts.add(fontInfo.family);
+    };
+  
+    
+    // Theme sync
+    window.__SUPERDESIGN_PREVIEW__.applyTheme = function(payload, isDark) {
+      var root = document.documentElement;
+      var colorVars = isDark ? payload.dark : payload.light;
+      for (var name in colorVars) {
+        if (colorVars.hasOwnProperty(name)) {
+          root.style.setProperty(name, colorVars[name]);
+        }
+      }
+
+      if (payload.customFonts && Array.isArray(payload.customFonts)) {
+        payload.customFonts.forEach(function(fontInfo) {
+          window.__SUPERDESIGN_PREVIEW__.loadCustomFont(fontInfo);
+        });
+      }
+
+      if (payload.typography) {
+        var t = payload.typography;
+        if (t.fontSans && !t.fontSans.startsWith('Custom-')) window.__SUPERDESIGN_PREVIEW__.loadGoogleFont(t.fontSans);
+        if (t.fontSerif && !t.fontSerif.startsWith('Custom-')) window.__SUPERDESIGN_PREVIEW__.loadGoogleFont(t.fontSerif);
+        if (t.fontMono && !t.fontMono.startsWith('Custom-')) window.__SUPERDESIGN_PREVIEW__.loadGoogleFont(t.fontMono);
+
+        var formatFontValue = function(ff) {
+          if (!ff) return ff;
+          var first = ff.split(',')[0].trim().replace(/^["']|["']$/g, '');
+          return first.startsWith('var(') ? first : '"' + first + '"';
+        };
+        root.style.setProperty('--font-sans', formatFontValue(t.fontSans));
+        root.style.setProperty('--font-serif', formatFontValue(t.fontSerif));
+        root.style.setProperty('--font-mono', formatFontValue(t.fontMono));
+        root.style.setProperty('--font-size', t.fontSize);
+        root.style.setProperty('--line-height', t.lineHeight);
+        root.style.setProperty('--letter-spacing-body', t.letterSpacing);
+        root.style.setProperty('--letter-spacing-heading', t.headingLetterSpacing);
+        root.style.setProperty('--font-weight-regular', t.fontWeightRegular);
+        root.style.setProperty('--font-weight-bold', t.fontWeightBold);
+      }
+
+      if (payload.effects) {
+        root.style.setProperty('--radius', payload.effects.radius);
+        root.style.setProperty('--shadow', payload.effects.shadow);
+      }
+
+      if (isDark) { root.classList.add('dark'); } else { root.classList.remove('dark'); }
+    };
+  
+    
+    // Message listener
+    window.addEventListener('message', function(event) {
+      if (event.data && event.data.type === 'request-screenshot') {
+        if (window.__SUPERDESIGN_PREVIEW__) {
+          window.__SUPERDESIGN_PREVIEW__.captureScreenshot(event.data.requestId, event.data.autoCaptureId);
+        }
+      }
+
+      if (event.data && event.data.type === 'superdesign-theme-update') {
+        if (window.__SUPERDESIGN_PREVIEW__ && event.data.payload) {
+          var isDark = event.data.isDark || false;
+          window.__SUPERDESIGN_PREVIEW__.applyTheme(event.data.payload, isDark);
+          window.__SUPERDESIGN_PREVIEW__.sendMessage('theme-applied', { timestamp: Date.now(), isDark: isDark });
+        }
+      }
+
+      if (event.data && event.data.type === 'navigate-to-route') {
+        var route = event.data.route;
+        if (route) {
+          if (route === '/') {
+            if (window.location.hash) {
+              history.pushState(null, '', window.location.pathname + window.location.search);
+              window.dispatchEvent(new HashChangeEvent('hashchange'));
+            }
+          } else {
+            var newHash = '#' + route;
+            if (window.location.hash !== newHash) {
+              window.location.hash = route;
+            }
+          }
+        }
+      }
+    });
+  
+    
+    // Page lifecycle
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() { window.__SUPERDESIGN_PREVIEW__.ready(); });
+    } else {
+      window.__SUPERDESIGN_PREVIEW__.ready();
+    }
+
+    function onPageFullyLoaded() {
+      requestAnimationFrame(function() {
+        requestAnimationFrame(function() {
+          setTimeout(function() {
+            window.__SUPERDESIGN_PREVIEW__.sendMessage('loaded', { timestamp: Date.now() });
+          }, 1500);
+          // Auto-capture disabled for this preview type
+        });
+      });
+    }
+
+    if (document.readyState === 'complete') {
+      onPageFullyLoaded();
+    } else {
+      window.addEventListener('load', onPageFullyLoaded);
+    }
+  
+  </script>
+<script  src="https://cdn.jsdelivr.net/npm/petite-vue@0.4.1/dist/petite-vue.iife.js"></script>
+</head>
+<body>
+<body><div class="min-h-screen flex flex-col"><!-- Navigation --><nav class="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center bg-[#0A0A0A]/90 backdrop-blur-md border-b border-white/5" id="i8nh"><a href="#" id="nav-logo" class="flex items-center">
+                <img src="https://vgbujcuwptvheqijyjbe.supabase.co/storage/v1/object/public/hmac-uploads/uploads/d42fe412-8777-4081-9552-3c8e1e38b1a1/1770640667090-a76a638d/cropped-BR_Signet_RGB_weiss.png" alt="Bowlingroom" class="h-[45px] w-auto" onerror="this.onerror=null;this.src='https://placehold.co/600x400/1a1a1a/888?text=Image';">
+            </a><div class="hidden md:flex gap-8 text-sm font-bold uppercase tracking-widest"><a href="#" id="nav-about-link" class="text-white/90 hover:text-[#FF3E00] transition-colors">Über Uns</a><a href="#" id="nav-career-link" class="text-white/90 hover:text-[#FF3E00] transition-colors">Karriere</a><a href="#locations" id="nav-loc-link" class="text-white/90 hover:text-[#FF3E00] transition-colors">Standorte</a></div><a href="#" id="nav-booking-cta" class="bg-[#FF3E00] text-white px-6 py-2 font-display font-black uppercase tracking-tighter hover:bg-white hover:text-black transition-all transform hover:-translate-y-0.5">
+                Jetzt Buchen
+            </a></nav><!-- Hero Section --><header class="relative h-screen flex items-center justify-center overflow-hidden pt-20"><div class="absolute inset-0 z-0"><div class="absolute inset-0 bg-black/40 z-10"></div><img src="https://main-bowling.de/wp-content/uploads/2025/12/main-bowling-bahn-bg-01.jpg" alt="Bowling Background" class="w-full h-full object-cover"/ onerror="this.onerror=null;this.src='https://placehold.co/600x400/1a1a1a/888?text=Image';"></div><div class="relative z-20 text-center px-4"><p class="uppercase tracking-[0.3em] text-sm md:text-base mb-4 font-bold text-[#FF3E00]">Das ultimative Bowling-Erlebnis</p><h1 class="text-6xl md:text-[10rem] font-display font-black leading-none tracking-tighter uppercase mb-6 drop-shadow-2xl">
+                    Never Stop<br/>Playing
+                </h1><div class="flex flex-col md:flex-row gap-4 justify-center items-center mt-12"><a href="#locations" id="hero-scroll-btn" class="group flex items-center gap-3 text-xl font-bold border-b-2 border-white pb-1 hover:border-[#FF3E00] hover:text-[#FF3E00] transition-all">
+                        Unsere Bahnen entdecken 
+                        <iconify-icon icon="lucide:arrow-down-right" class="group-hover:translate-x-1 group-hover:translate-y-1 transition-transform"></iconify-icon></a></div></div><!-- Scrolling Marquee --><div class="absolute bottom-0 w-full overflow-hidden bg-white text-black py-3 whitespace-nowrap font-display font-black uppercase text-xl"><div class="flex animate-[marquee_20s_linear_infinite]"><span class="mx-8">🎳 Professional Lanes</span><span class="mx-8">🍔 Premium Burgers</span><span class="mx-8">🍹 Signature Cocktails</span><span class="mx-8">🎉 Unvergessliche Events</span><span class="mx-8">🔥 Bestes Bowling der Stadt</span><span class="mx-8">🎳 Professional Lanes</span><span class="mx-8">🍔 Premium Burgers</span><span class="mx-8">🍹 Signature Cocktails</span></div></div></header><!-- Locations Section --><section id="locations" class="py-24 bg-white text-black"><div class="max-w-[1440px] mx-auto px-6"><div class="flex justify-between items-end mb-16"><div><span class="text-[#FF3E00] font-bold uppercase tracking-widest text-sm">Wo wir zuhause sind</span><h2 class="text-5xl md:text-7xl font-display font-black uppercase leading-none mt-2">Unsere 4 Standorte. <br/>Ein Spirit.</h2></div><p class="max-w-xs text-sm font-medium opacity-70 mb-2">
+                        Wähle deinen Standort und tauche ein in die Welt von Bowlingroom. Modernstes Equipment und bestes Entertainment garantieren einen Strike.
+                    </p></div><div class="grid grid-cols-1 md:grid-cols-4 gap-4"><!-- Location Card 1 --><div class="group relative h-[500px] overflow-hidden bg-neutral-100 skew-hover transition-transform duration-500"><img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAweo9gEOuFJqkm_3rrJAr6Jc1h8h-HTofMpTK9Oqac6QsGWoSgMQNUI_-0TU2-9GsFS-WPpERF9xf_Afh6H3QqBlJtgULbvScCEZX5XArN1gqs6QVp8j9g4I9QOzltGUamAF3fPmqyQ=s680-w680-h510" alt="Koblenz" class="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-110 group-hover:scale-100"/ onerror="this.onerror=null;this.src='https://placehold.co/600x400/1a1a1a/888?text=Image';"><div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div><div class="absolute bottom-8 left-8 text-white"><h3 class="text-3xl font-display font-black uppercase">Koblenz</h3><p class="text-sm opacity-80 mb-4">Zentrale Lage in Koblenz</p><a href="#" id="loc-koblenz-link" class="inline-block bg-[#FF3E00] text-black px-4 py-2 text-xs font-bold uppercase hover:bg-white transition-colors">Details ansehen</a></div></div><!-- Location Card 2 --><div class="group relative h-[500px] overflow-hidden bg-neutral-100 skew-hover transition-transform duration-500 md:mt-12"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmHpAKVph9mhRBuDusOeR3JWKD6Bqde7wVOQ&amp;s" alt="Overath" class="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-110 group-hover:scale-100"/ onerror="this.onerror=null;this.src='https://placehold.co/600x400/1a1a1a/888?text=Image';"><div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div><div class="absolute bottom-8 left-8 text-white"><h3 class="text-3xl font-display font-black uppercase">Overath</h3><p class="text-sm opacity-80 mb-4">Strike-Garantie in Overath</p><a href="#" id="loc-overath-link" class="inline-block bg-[#FF3E00] text-black px-4 py-2 text-xs font-bold uppercase hover:bg-white transition-colors">Details ansehen</a></div></div><!-- Location Card 3 --><div class="group relative h-[500px] overflow-hidden bg-neutral-100 skew-hover transition-transform duration-500"><img src="https://embedsocial.com/admin/cdncache/feed-media/18065/18065908046637100/image_0.jpeg" alt="Trier" class="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-110 group-hover:scale-100"/ onerror="this.onerror=null;this.src='https://placehold.co/600x400/1a1a1a/888?text=Image';"><div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div><div class="absolute bottom-8 left-8 text-white"><h3 class="text-3xl font-display font-black uppercase">Trier</h3><p class="text-sm opacity-80 mb-4">Entertainment in Trier</p><a href="#" id="loc-trier-link" class="inline-block bg-[#FF3E00] text-black px-4 py-2 text-xs font-bold uppercase hover:bg-white transition-colors">Details ansehen</a></div></div><!-- Location Card 4 --><div class="group relative h-[500px] overflow-hidden bg-neutral-100 skew-hover transition-transform duration-500 md:mt-12"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiqoyc8E66F3L4K-YS07_HO71vFJUy0CjF1Z3h1HfC&amp;s" alt="Hagen" class="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-110 group-hover:scale-100"/ onerror="this.onerror=null;this.src='https://placehold.co/600x400/1a1a1a/888?text=Image';"><div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div><div class="absolute bottom-8 left-8 text-white"><h3 class="text-3xl font-display font-black uppercase">Hagen</h3><p class="text-sm opacity-80 mb-4">Urbanes Feeling in Hagen</p><a href="#" id="loc-hagen-link" class="inline-block bg-[#FF3E00] text-black px-4 py-2 text-xs font-bold uppercase hover:bg-white transition-colors">Details ansehen</a></div></div></div></div></section><!-- Offers Section --><section id="angebote" class="py-24 bg-[#0A0A0A]"><div class="max-w-[1440px] mx-auto px-6"><div class="text-center mb-20"><h2 class="text-5xl md:text-8xl font-display font-black uppercase mb-4">Entertainment<br/><span class="text-[#FF3E00]">Pur</span></h2><p class="text-neutral-400 max-w-xl mx-auto">Mehr als nur Bowling. Wir bieten das volle Paket für deinen Feierabend oder dein nächstes Team-Event.</p></div><div class="grid grid-cols-1 md:grid-cols-2 gap-12"><!-- Offer 1 --><div class="group flex flex-col md:flex-row gap-8 items-center"><div class="w-full md:w-1/2 aspect-square overflow-hidden border-2 border-white/10"><img src="https://www.bowlingroom.com/wp-content/uploads/2021/10/20170216-IMG_5080-scaled.jpg" alt="Bowling" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/ onerror="this.onerror=null;this.src='https://placehold.co/600x400/1a1a1a/888?text=Image';"></div><div class="w-full md:w-1/2"><h3 class="text-4xl font-display font-black uppercase mb-4">Elite Bowling</h3><p class="text-neutral-400 mb-6">High-End Bahnen mit modernster Scoring-Software. Neon-Lights und bester Sound inklusive.</p><ul class="space-y-2 mb-8 text-sm"><li class="flex items-center gap-2"><iconify-icon icon="lucide:check" class="text-[#FF3E00]"></iconify-icon> VIP Lounges</li><li class="flex items-center gap-2"><iconify-icon icon="lucide:check" class="text-[#FF3E00]"></iconify-icon> Kinder-Bumper System</li><li class="flex items-center gap-2"><iconify-icon icon="lucide:check" class="text-[#FF3E00]"></iconify-icon> Pro-Leihschuhe</li></ul><a href="#" id="offer-bowling-link" class="text-[#FF3E00] font-bold uppercase border-b-2 border-transparent hover:border-[#FF3E00] transition-all">Details ansehen</a></div></div><!-- Offer 2 --><div class="group flex flex-col md:flex-row-reverse gap-8 items-center"><div class="w-full md:w-1/2 aspect-square overflow-hidden border-2 border-white/10"><img src="https://www.bowlingroom.com/wp-content/uploads/2021/08/IMG_0945-2-e1641901848188.jpg" alt="Gastronomy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/ onerror="this.onerror=null;this.src='https://placehold.co/600x400/1a1a1a/888?text=Image';"></div><div class="w-full md:w-1/2"><h3 class="text-4xl font-display font-black uppercase mb-4">Gastronomie</h3><p class="text-neutral-400 mb-6">Burger, Snacks &amp; Signature Drinks. Unser Küchenteam rockt den Hunger nach dem Strike.</p><ul class="space-y-2 mb-8 text-sm"><li class="flex items-center gap-2"><iconify-icon icon="lucide:check" class="text-[#FF3E00]"></iconify-icon> Smash Burger</li><li class="flex items-center gap-2"><iconify-icon icon="lucide:check" class="text-[#FF3E00]"></iconify-icon> Craft Beer Selection</li><li class="flex items-center gap-2"><iconify-icon icon="lucide:check" class="text-[#FF3E00]"></iconify-icon> Cocktail Happy Hour</li></ul><a href="#" id="offer-gastro-link" class="text-[#FF3E00] font-bold uppercase border-b-2 border-transparent hover:border-[#FF3E00] transition-all">Speisekarte</a></div></div></div></div></section><!-- Events Section --><section id="events" class="py-24 bg-white text-black"><div class="max-w-[1440px] mx-auto px-6"><div class="flex justify-between items-center mb-16"><h2 class="text-5xl md:text-7xl font-display font-black uppercase">Events &amp; <br/><span class="text-[#FF3E00]">Aktionen</span></h2><div class="hidden md:flex gap-4"><button class="w-12 h-12 rounded-full border border-black flex items-center justify-center hover:bg-[#0A0A0A] hover:text-white transition-all"><iconify-icon icon="lucide:chevron-left" class="text-xl"></iconify-icon></button><button class="w-12 h-12 rounded-full border border-black flex items-center justify-center hover:bg-[#0A0A0A] hover:text-white transition-all"><iconify-icon icon="lucide:chevron-right" class="text-xl"></iconify-icon></button></div></div><div class="grid grid-cols-1 md:grid-cols-3 gap-6"><div class="p-8 border-2 border-black flex flex-col h-full hover:bg-[#0A0A0A] hover:text-white transition-all group"><span class="text-[#FF3E00] font-bold mb-4">Jeden Freitag</span><h4 class="text-3xl font-display font-black uppercase mb-4">Disco Night Bowling</h4><p class="text-sm mb-12 opacity-80">Der ultimative Party-Mix: DJ-Sounds, Schwarzlicht und Shots bei jedem Strike.</p><div class="mt-auto flex justify-between items-center"><span class="text-xl font-black">ab 20:00 Uhr</span><a href="#" id="event-disco-link" class="w-10 h-10 bg-[#FF3E00] rounded-full flex items-center justify-center text-black group-hover:bg-white"><iconify-icon icon="lucide:plus"></iconify-icon></a></div></div><div class="p-8 border-2 border-black flex flex-col h-full bg-[#0A0A0A] text-white"><span class="text-[#FF3E00] font-bold mb-4">Business Special</span><h4 class="text-3xl font-display font-black uppercase mb-4">Teambuilding Strikes</h4><p class="text-sm mb-12 opacity-80">Stärken Sie den Teamgeist mit unseren exklusiven Firmen-Paketen inklusive Buffet.</p><div class="mt-auto flex justify-between items-center"><span class="text-xl font-black">Anfrage senden</span><a href="#" id="event-business-link" class="w-10 h-10 bg-[#FF3E00] rounded-full flex items-center justify-center text-black"><iconify-icon icon="lucide:arrow-right"></iconify-icon></a></div></div><div class="p-8 border-2 border-black flex flex-col h-full hover:bg-[#0A0A0A] hover:text-white transition-all group"><span class="text-[#FF3E00] font-bold mb-4">Weekend Special</span><h4 class="text-3xl font-display font-black uppercase mb-4">Family Sunday</h4><p class="text-sm mb-12 opacity-80">Bumper-Bowling für die Kleinen und Pancake-Frühstück für alle. Sonntagsglück.</p><div class="mt-auto flex justify-between items-center"><span class="text-xl font-black">10:00 - 15:00</span><a href="#" id="event-family-link" class="w-10 h-10 bg-[#FF3E00] rounded-full flex items-center justify-center text-black group-hover:bg-white"><iconify-icon icon="lucide:plus"></iconify-icon></a></div></div></div></div></section><!-- Newsletter Section --><section class="py-24 bg-[#FF3E00] text-black"><div class="max-w-[1440px] mx-auto px-6 grid md:grid-cols-2 gap-12 items-center"><h2 class="text-4xl md:text-6xl font-display font-black uppercase leading-none">
+                    Verpasse keinen <br/>Strike mehr.
+                </h2><form class="flex border-b-4 border-black pb-2"><input type="email" placeholder="Deine Email-Adresse" class="bg-transparent w-full text-2xl font-bold placeholder-black/50 focus:outline-none"/><button type="submit" id="newsletter-btn" class="text-2xl"><iconify-icon icon="lucide:arrow-right"></iconify-icon></button></form></div></section><!-- Join The Team Section --><section id="jointheteam" class="py-32 bg-[#0A0A0A] text-white text-center"><div class="max-w-[1440px] mx-auto px-6"><span class="text-[#FF3E00] font-bold uppercase tracking-widest text-sm mb-4 block">Karriere</span><h2 class="text-6xl md:text-8xl font-display font-black uppercase mb-8 leading-none">
+                    Join the <br/><span class="text-[#FF3E00]">Team</span></h2><p class="text-neutral-400 max-w-2xl mx-auto text-lg md:text-xl mb-12 font-medium">
+                    Du liebst Entertainment, bist ein Teamplayer und behältst auch bei vollem Haus einen kühlen Kopf? Werde Teil der Bowlingroom-Family und sorge gemeinsam mit uns für unvergessliche Momente.
+                </p><a href="#" id="career-cta-link" class="inline-block bg-[#FF3E00] text-white px-10 py-4 font-display font-black uppercase tracking-tighter hover:bg-white hover:text-black transition-all transform hover:-translate-y-1 active:scale-95">
+                    Jetzt Bewerbung einreichen
+                </a></div></section><!-- Gallery Section --><section id="gallery" class="py-24 bg-white text-black"><div class="max-w-[1440px] mx-auto px-6"><div class="mb-16"><span class="text-[#FF3E00] font-bold uppercase tracking-widest text-sm">Impressionen</span><h2 class="text-5xl md:text-7xl font-display font-black uppercase mt-2">Galerie</h2></div><div class="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[250px] md:auto-rows-[300px]"><!-- Masonry Grid Layout --><div class="col-span-2 row-span-2 group relative overflow-hidden bg-neutral-100"><img src="https://www.bowlingroom.com/wp-content/uploads/2021/11/53894583_2278645162156123_8671520369120641024_n-e1641898216871.jpg" alt="Bowling Action" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-105 group-hover:scale-100"/ onerror="this.onerror=null;this.src='https://placehold.co/600x400/1a1a1a/888?text=Image';"><div class="absolute inset-0 bg-[#FF3E00]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div></div><div class="group relative overflow-hidden bg-neutral-100"><img src="https://www.bowlingroom.com/wp-content/uploads/2021/11/Trier3-scaled-1-e1641898256626.jpg" alt="Standort Trier" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-105 group-hover:scale-100"/ onerror="this.onerror=null;this.src='https://placehold.co/600x400/1a1a1a/888?text=Image';"><div class="absolute inset-0 bg-[#FF3E00]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div></div><div class="group relative overflow-hidden bg-neutral-100"><img src="https://www.bowlingroom.com/wp-content/uploads/2021/11/55622699_2307553855931920_6887757761749188608_n-e1641898388626.jpg" alt="Bowling Vibes" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-105 group-hover:scale-100"/ onerror="this.onerror=null;this.src='https://placehold.co/600x400/1a1a1a/888?text=Image';"><div class="absolute inset-0 bg-[#FF3E00]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div></div><div class="col-span-1 md:col-span-2 group relative overflow-hidden bg-neutral-100"><img src="https://www.bowlingroom.com/wp-content/uploads/2021/11/eat_drink-Restaurant6-e1641898272478.jpeg" alt="Gastronomie" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-105 group-hover:scale-100"/ onerror="this.onerror=null;this.src='https://placehold.co/600x400/1a1a1a/888?text=Image';"><div class="absolute inset-0 bg-[#FF3E00]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div></div></div></div></section><!-- Footer --><footer class="bg-[#0A0A0A] pt-24 pb-12 text-white"><div class="max-w-[1440px] mx-auto px-6"><div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-20"><div class="col-span-1 md:col-span-2"><a href="#" id="footer-logo" class="text-5xl font-display font-black tracking-tighter mb-8 block">
+                            BOWLING<span class="text-[#FF3E00]">ROOM</span></a><p class="text-neutral-400 max-w-sm mb-8 italic">
+                            "Das Leben ist ein Spiel. Wir stellen die Regeln auf den Kopf und die Pins wieder auf."
+                        </p><div class="flex gap-6"><a href="#" id="social-fb" class="text-2xl hover:text-[#FF3E00] transition-colors"><iconify-icon icon="mdi:facebook"></iconify-icon></a><a href="#" id="social-ig" class="text-2xl hover:text-[#FF3E00] transition-colors"><iconify-icon icon="mdi:instagram"></iconify-icon></a><a href="#" id="social-tt" class="text-2xl hover:text-[#FF3E00] transition-colors"><iconify-icon icon="mdi:tiktok"></iconify-icon></a></div></div><div><h5 class="text-[#FF3E00] font-bold uppercase tracking-widest text-xs mb-6">Direkt-Links</h5><ul class="space-y-4 font-bold"><li><a href="#" id="f-link-1" class="hover:translate-x-2 transition-transform inline-block">Preise &amp; Tarife</a></li><li><a href="#" id="f-link-2" class="hover:translate-x-2 transition-transform inline-block">Gutscheine</a></li><li><a href="#" id="f-link-3" class="hover:translate-x-2 transition-transform inline-block">Karriere</a></li><li><a href="#" id="f-link-4" class="hover:translate-x-2 transition-transform inline-block">Kontakt</a></li></ul></div><div><h5 class="text-[#FF3E00] font-bold uppercase tracking-widest text-xs mb-6">Rechtliches</h5><ul class="space-y-4 text-sm text-neutral-500 font-medium"><li><a href="#" id="f-legal-1" class="hover:text-white">Impressum</a></li><li><a href="#" id="f-legal-2" class="hover:text-white">Datenschutz</a></li><li><a href="#" id="f-legal-3" class="hover:text-white">AGB</a></li><li><a href="#" id="f-legal-4" class="hover:text-white">Cookie Einstellungen</a></li></ul></div></div><div class="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center text-xs text-neutral-600 gap-4"><p>© 2024 Bowlingroom Entertainment GmbH. Alle Rechte vorbehalten.</p><p>Entwickelt für Striker &amp; Träumer.</p></div></div></footer></div>
+  <script>
+    (function () {
+      var linkMap = {
+        'loc-koblenz-link': '/locations/koblenz',
+        'loc-overath-link': '/locations/oberrad',
+        'loc-trier-link': '/locations/trier',
+        'loc-hagen-link': '/locations/hagen'
+      };
+      Object.keys(linkMap).forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) el.setAttribute('href', linkMap[id]);
+      });
+    })();
+  </script>
+
+</body>
+
+
+<script defer type="module">
+  window.addEventListener('error', function(event) {
+    var msg = event.message || '';
+    var name = (event.error && event.error.name) || msg.split(':')[0] || '';
+    if (name === 'HierarchyRequestError' || msg.includes("Failed to execute 'appendChild' on 'Node'")) return;
+    if (window.__SUPERDESIGN_PREVIEW__) {
+      var err = event.error;
+      window.__SUPERDESIGN_PREVIEW__.sendMessage('error', {
+        message: event.message, filename: event.filename,
+        lineno: event.lineno, colno: event.colno,
+        name: (err && err.name) || name || 'Error',
+        stack: (err && err.stack) || null
+      });
+    }
+  });
+  window.addEventListener('unhandledrejection', function(event) {
+    var reason = event.reason;
+    var msg = (reason && reason.message) || (typeof reason === 'string' ? reason : '');
+    var name = (reason && reason.name) || 'UnhandledRejection';
+    if (name === 'HierarchyRequestError' || msg.includes("Failed to execute 'appendChild' on 'Node'")) return;
+    if (window.__SUPERDESIGN_PREVIEW__) {
+      window.__SUPERDESIGN_PREVIEW__.sendMessage('unhandled-rejection', {
+        reason: (reason && reason.message) || String(reason),
+        name: name,
+        stack: (reason && reason.stack) || null
+      });
+    }
+  });
+</script>
+<script defer type="module">import '/__visual-edit-bridge/iframe-runtime.mjs?v=e62d2259';</script>
+<script defer type="module">
+  (function() {
+    'use strict';
+
+    var MAX_RENDER_DEPTH = 5;
+
+    function showPage() {
+      document.body.classList.add('sd-ready');
+    }
+
+    var componentRegistry = new Map();
+    var instanceRegistry = new Map();
+    var API_BASE = "https://api.superdesign.dev";
+    var DRAFT_ID = "4c590112-3a39-44c2-b5cd-8fa2989a1951";
+
+    function buildDefaultProps(definition) {
+      var defaultProps = {};
+      var props = definition.props;
+      if (!props || !Array.isArray(props)) return defaultProps;
+      for (var i = 0; i < props.length; i++) {
+        var prop = props[i];
+        if (prop.defaultValue === undefined) continue;
+        var path = prop.name.split('.');
+        var current = defaultProps;
+        for (var j = 0; j < path.length - 1; j++) {
+          var key = path[j];
+          if (!(key in current) || typeof current[key] !== 'object' || current[key] === null) {
+            current[key] = {};
+          }
+          current = current[key];
+        }
+        current[path[path.length - 1]] = prop.defaultValue;
+      }
+      return defaultProps;
+    }
+
+    function deepMerge(target, source) {
+      var result = Object.assign({}, target);
+      for (var key in source) {
+        if (!source.hasOwnProperty(key)) continue;
+        if (
+          source[key] && typeof source[key] === 'object' && !Array.isArray(source[key]) &&
+          result[key] && typeof result[key] === 'object' && !Array.isArray(result[key])
+        ) {
+          result[key] = deepMerge(result[key], source[key]);
+        } else {
+          result[key] = source[key];
+        }
+      }
+      return result;
+    }
+
+    function registerComponent(id, definition) {
+      componentRegistry.set(id, definition);
+      console.log('[SDComponent] Registered component:', id);
+    }
+
+    function renderComponent(element, depth) {
+      depth = depth || 0;
+      var componentId = element.getAttribute('componentid') || element.getAttribute('ref');
+      var instanceId = element.getAttribute('instance');
+      var propsAttr = element.getAttribute('props');
+
+      if (!componentId) {
+        console.warn('[SDComponent] Missing componentId attribute on sd-component');
+        return;
+      }
+
+      if (depth >= MAX_RENDER_DEPTH) {
+        console.warn('[SDComponent] Max render depth reached for:', componentId);
+        element.setAttribute('data-error', 'max-depth');
+        return;
+      }
+
+      var definition = componentRegistry.get(componentId);
+      if (!definition) {
+        console.warn('[SDComponent] Component not found:', componentId);
+        element.setAttribute('data-pending', 'true');
+        return;
+      }
+
+      var instanceProps = {};
+      if (propsAttr) {
+        try { instanceProps = JSON.parse(propsAttr); }
+        catch (e) { console.warn('[SDComponent] Invalid props JSON:', propsAttr); }
+      }
+
+      var defaultProps = buildDefaultProps(definition);
+      var finalProps = deepMerge(defaultProps, instanceProps);
+
+      element.innerHTML = definition.htmlContent;
+
+      if (window.PetiteVue) {
+        finalProps.$emit = function(eventName, payload) {
+          if (payload && typeof payload === 'object' && payload.href) {
+            window.location.href = payload.href;
+            return;
+          }
+          var customEvent = new CustomEvent('sd-' + eventName, {
+            detail: payload, bubbles: true, composed: true,
+          });
+          element.dispatchEvent(customEvent);
+        };
+        window.PetiteVue.createApp(finalProps).mount(element);
+      } else {
+        console.warn('[SDComponent] Petite-Vue not loaded, template syntax will not be resolved');
+      }
+
+      instanceRegistry.set(instanceId, {
+        componentId: componentId,
+        element: element,
+        props: finalProps,
+        version: definition.version,
+      });
+
+      element.removeAttribute('data-pending');
+      element.setAttribute('data-rendered', 'true');
+      element.setAttribute('data-version', String(definition.version));
+      console.log('[SDComponent] Rendered:', componentId, instanceId);
+
+      // Render any nested sd-component children that were just injected
+      var nestedElements = element.querySelectorAll('sd-component[componentid], sd-component[ref]');
+      if (nestedElements.length > 0) {
+        var missingIds = [];
+        nestedElements.forEach(function(nested) {
+          var nestedId = nested.getAttribute('componentid') || nested.getAttribute('ref');
+          if (nestedId && !componentRegistry.has(nestedId)) {
+            missingIds.push(nestedId);
+          }
+        });
+
+        if (missingIds.length > 0) {
+          // Fetch missing nested components, then render
+          loadComponentsByIds(missingIds).then(function() {
+            nestedElements.forEach(function(nested) {
+              if (!nested.getAttribute('data-rendered')) {
+                renderComponent(nested, depth + 1);
+              }
+            });
+          });
+        } else {
+          // All nested definitions already loaded — render immediately
+          nestedElements.forEach(function(nested) {
+            if (!nested.getAttribute('data-rendered')) {
+              renderComponent(nested, depth + 1);
+            }
+          });
+        }
+      }
+    }
+
+    function updateComponentInstances(componentId) {
+      var elements = document.querySelectorAll('sd-component[componentid="' + componentId + '"], sd-component[ref="' + componentId + '"]');
+      elements.forEach(function(el) { renderComponent(el); });
+    }
+
+    function initializeComponents() {
+      var elements = document.querySelectorAll('sd-component[componentid], sd-component[ref]');
+      elements.forEach(function(el) {
+        if (!el.getAttribute('data-rendered')) { renderComponent(el); }
+      });
+    }
+
+    async function loadComponentsByIds(ids) {
+      if (!ids || ids.length === 0) return;
+      // Deduplicate and filter already-loaded
+      var uniqueIds = ids.filter(function(id, i, arr) {
+        return arr.indexOf(id) === i && !componentRegistry.has(id);
+      });
+      if (uniqueIds.length === 0) return;
+
+      try {
+        console.log('[SDComponent] Batch loading components:', uniqueIds);
+        var response = await fetch(API_BASE + '/v1/design-drafts/components/batch', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ componentIds: uniqueIds }),
+        });
+        if (!response.ok) throw new Error('Batch load failed: ' + response.status);
+        var components = await response.json();
+        console.log('[SDComponent] Batch loaded', components.length, 'components');
+        components.forEach(function(comp) { registerComponent(comp.id, comp); });
+      } catch (error) {
+        console.error('[SDComponent] Failed to batch load components:', error);
+      }
+    }
+
+    async function loadComponentsForDraft() {
+      if (!DRAFT_ID) {
+        console.warn('[SDComponent] No draft ID configured');
+        showPage();
+        return;
+      }
+      try {
+        console.log('[SDComponent] Loading components for draft:', DRAFT_ID);
+        var response = await fetch(API_BASE + '/v1/design-drafts/' + DRAFT_ID + '/components', {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        });
+        if (!response.ok) throw new Error('Failed to load components: ' + response.status);
+        var components = await response.json();
+        console.log('[SDComponent] Loaded', components.length, 'components');
+        components.forEach(function(comp) { registerComponent(comp.id, comp); });
+        initializeComponents();
+        showPage();
+      } catch (error) {
+        console.error('[SDComponent] Failed to load components:', error);
+        showPage();
+      }
+    }
+
+    function findReferencedComponents() {
+      var elements = document.querySelectorAll('sd-component[componentid], sd-component[ref]');
+      var ids = new Set();
+      elements.forEach(function(el) {
+        var ref = el.getAttribute('componentid') || el.getAttribute('ref');
+        if (ref) ids.add(ref);
+      });
+      return Array.from(ids);
+    }
+
+    window.__SD_COMPONENTS__ = {
+      register: registerComponent,
+      render: renderComponent,
+      update: updateComponentInstances,
+      loadForDraft: loadComponentsForDraft,
+      loadByIds: loadComponentsByIds,
+      init: initializeComponents,
+      findRefs: findReferencedComponents,
+      getRegistry: function() { return componentRegistry; },
+      getInstances: function() { return instanceRegistry; },
+      getDraftId: function() { return DRAFT_ID; },
+    };
+
+    window.addEventListener('message', function(event) {
+      if (event.data && event.data.type === 'SD_COMPONENT_UPDATE') {
+        var cId = event.data.componentId;
+        var def = event.data.definition;
+        if (cId && def) { registerComponent(cId, def); updateComponentInstances(cId); }
+      }
+      if (event.data && event.data.type === 'SD_COMPONENTS_REGISTER') {
+        var comps = event.data.components;
+        if (Array.isArray(comps)) {
+          comps.forEach(function(c) { registerComponent(c.id, c); });
+          initializeComponents();
+        }
+      }
+    });
+
+    function bootComponents() {
+      // Pre-register components from __SD_COMPONENT_PRELOAD__ (injected by backend for standalone previews)
+      if (window.__SD_COMPONENT_PRELOAD__ && Array.isArray(window.__SD_COMPONENT_PRELOAD__)) {
+        console.log('[SDComponent] Pre-registering', window.__SD_COMPONENT_PRELOAD__.length, 'preloaded components');
+        window.__SD_COMPONENT_PRELOAD__.forEach(function(comp) {
+          registerComponent(comp.id, comp);
+        });
+      }
+
+      var refs = findReferencedComponents();
+      var unloaded = refs.filter(function(id) { return !componentRegistry.has(id); });
+
+      if (unloaded.length > 0) {
+        if (DRAFT_ID) {
+          loadComponentsForDraft();
+        } else {
+          // No draft ID — try batch loading the missing IDs directly
+          loadComponentsByIds(unloaded).then(function() {
+            initializeComponents();
+            showPage();
+          });
+        }
+      } else if (refs.length > 0) {
+        // All components already registered (e.g. from preload) — render immediately
+        initializeComponents();
+        showPage();
+      } else {
+        showPage();
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', bootComponents);
+    } else {
+      bootComponents();
+    }
+
+    var observer = new MutationObserver(function(mutations) {
+      var hasNew = false;
+      mutations.forEach(function(m) {
+        m.addedNodes.forEach(function(node) {
+          if (node.nodeType === 1) {
+            if (node.tagName === 'SD-COMPONENT') { hasNew = true; }
+            else if (node.querySelector) {
+              if (node.querySelectorAll('sd-component[componentid], sd-component[ref]').length > 0) hasNew = true;
+            }
+          }
+        });
+      });
+      if (hasNew) {
+        var refs = findReferencedComponents();
+        var unloaded = refs.filter(function(id) { return !componentRegistry.has(id); });
+        if (unloaded.length > 0) {
+          loadComponentsByIds(unloaded).then(function() {
+            initializeComponents();
+          });
+        } else {
+          initializeComponents();
+        }
+      }
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    console.log('[SDComponent] Runtime initialized');
+  })();
+  </script>
+
+  <script>
+    (function () {
+      var linkMap = {
+        'loc-koblenz-link': '/locations/koblenz',
+        'loc-overath-link': '/locations/oberrad',
+        'loc-trier-link': '/locations/trier',
+        'loc-hagen-link': '/locations/hagen'
+      };
+      Object.keys(linkMap).forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) el.setAttribute('href', linkMap[id]);
+      });
+    })();
+  </script>
+
+</body>
+</html>
