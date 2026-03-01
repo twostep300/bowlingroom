@@ -12,12 +12,19 @@ export const GET: APIRoute = async (context) => {
   const user = await requireRole(context, ['ADMIN', 'EDITOR']);
   if (!user) return new Response(JSON.stringify({ ok: false, error: 'Unauthorized' }), { status: 401 });
 
-  const settings = await db.siteSetting.findMany({ orderBy: { key: 'asc' } });
-  const map = Object.fromEntries(settings.map((s) => [s.key, s.value]));
-  return new Response(JSON.stringify({ ok: true, settings: map }), {
-    status: 200,
-    headers: { 'content-type': 'application/json' }
-  });
+  try {
+    const settings = await db.siteSetting.findMany({ orderBy: { key: 'asc' } });
+    const map = Object.fromEntries(settings.map((s) => [s.key, s.value]));
+    return new Response(JSON.stringify({ ok: true, settings: map }), {
+      status: 200,
+      headers: { 'content-type': 'application/json' }
+    });
+  } catch {
+    return new Response(JSON.stringify({ ok: true, settings: {} }), {
+      status: 200,
+      headers: { 'content-type': 'application/json' }
+    });
+  }
 };
 
 export const PUT: APIRoute = async (context) => {

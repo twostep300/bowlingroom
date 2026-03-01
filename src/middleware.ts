@@ -1,21 +1,29 @@
 import type { MiddlewareHandler } from 'astro';
 import { parse } from 'cookie';
-import { db } from '@/lib/db';
 
 let redirectCache: Array<{ fromPath: string; toPath: string; statusCode: number }> = [];
 let redirectCacheExpiresAt = 0;
 
 async function getActiveRedirects() {
+  if (process.env.VERCEL || process.env.DISABLE_DB_REDIRECTS === 'true') return [];
+
   const now = Date.now();
   if (now < redirectCacheExpiresAt) return redirectCache;
 
-  const rows = await db.redirectRule.findMany({
-    where: { isActive: true },
-    select: { fromPath: true, toPath: true, statusCode: true }
-  });
-  redirectCache = rows;
-  redirectCacheExpiresAt = now + 60_000;
-  return rows;
+  try {
+    const { db } = await import('@/lib/db');
+    const rows = await db.redirectRule.findMany({
+      where: { isActive: true },
+      select: { fromPath: true, toPath: true, statusCode: true }
+    });
+    redirectCache = rows;
+    redirectCacheExpiresAt = now + 60_000;
+    return rows;
+  } catch {
+    redirectCache = [];
+    redirectCacheExpiresAt = now + 10_000;
+    return [];
+  }
 }
 
 function isSameOriginOrLoopback(originValue: string, expectedValue: string): boolean {
