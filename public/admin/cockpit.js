@@ -42,7 +42,7 @@ const moduleGroups = [
 ];
 
 const modules = moduleGroups.flatMap((group) => group.modules);
-const ADMIN_LOGIN_ENDPOINT = '/api/admin/session';
+const ADMIN_LOGIN_ENDPOINT = '/api/admin/me';
 
 let activeModule = 'builder';
 let csrfToken = '';
@@ -68,7 +68,7 @@ function hideLogin() {
 }
 
 function isAuthEndpoint(path) {
-  return path === '/api/admin/login' || path === '/api/admin/login/' || path === '/api/admin/session' || path === '/api/admin/session/';
+  return path === '/api/admin/login' || path === '/api/admin/login/' || path === '/api/admin/session' || path === '/api/admin/session/' || path === '/api/admin/me' || path === '/api/admin/me/';
 }
 
 function setStatus(msg, isError = false) {

@@ -51,6 +51,8 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
   const isAdminAuthPath =
     pathname === '/api/admin/login' ||
     pathname === '/api/admin/login/' ||
+    pathname === '/api/admin/me' ||
+    pathname === '/api/admin/me/' ||
     pathname === '/api/admin/session' ||
     pathname === '/api/admin/session/';
 
