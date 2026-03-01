@@ -1,4 +1,4 @@
-import { g as getCmsRuntimeConfig } from '../../chunks/cms-platform_HsZsHVYA.mjs';
+import { g as getCmsRuntimeConfig } from '../../chunks/cms-platform_BFp56eeM.mjs';
 export { renderers } from '../../renderers.mjs';
 
 const GET = async () => {

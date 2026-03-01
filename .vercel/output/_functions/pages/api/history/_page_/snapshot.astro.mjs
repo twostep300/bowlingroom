@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { i as isValidPageKey, r as readContentFromStorage, c as createSnapshotInStorage } from '../../../../chunks/cms-storage_CYJW-R64.mjs';
+import { i as isValidPageKey, r as readContentFromStorage, c as createSnapshotInStorage } from '../../../../chunks/cms-storage_7ZxVS-RI.mjs';
 export { renderers } from '../../../../renderers.mjs';
 
 const schema = z.object({ label: z.string().optional() });

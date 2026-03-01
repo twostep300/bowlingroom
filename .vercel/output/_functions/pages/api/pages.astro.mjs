@@ -1,4 +1,4 @@
-import { b as listPagesFromStorage } from '../../chunks/cms-storage_CYJW-R64.mjs';
+import { b as listPagesFromStorage } from '../../chunks/cms-storage_7ZxVS-RI.mjs';
 export { renderers } from '../../renderers.mjs';
 
 const GET = async () => {

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { parse } from 'cookie';
-import { d as db } from './db_DSJcG3jK.mjs';
+import { d as db } from './db_DpmQIvvC.mjs';
 
 const schema = z.object({
   name: z.string().min(1),

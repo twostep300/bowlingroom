@@ -1,4 +1,4 @@
-import { P as POST$1 } from '../../chunks/index_Car0Dna0.mjs';
+import { P as POST$1 } from '../../chunks/index_Ccr0mdQo.mjs';
 export { renderers } from '../../renderers.mjs';
 
 const POST = async (context) => POST$1(context);

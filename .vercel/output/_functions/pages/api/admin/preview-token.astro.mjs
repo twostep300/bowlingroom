@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { r as requireRole } from '../../../chunks/auth_Cf9RIyTi.mjs';
+import { r as requireRole } from '../../../chunks/auth_DISlxqQV.mjs';
 import { c as createPreviewToken } from '../../../chunks/payload-cms_DGSW8rk7.mjs';
 export { renderers } from '../../../renderers.mjs';
 

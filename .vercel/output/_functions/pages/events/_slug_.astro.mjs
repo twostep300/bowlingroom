@@ -1,7 +1,7 @@
 import { e as createAstro, f as createComponent, r as renderTemplate, h as addAttribute, ai as renderHead, u as unescapeHTML } from '../../chunks/astro/server_SWj2Xmpp.mjs';
 import 'piccolore';
 import 'clsx';
-import { d as db } from '../../chunks/db_DSJcG3jK.mjs';
+import { d as db } from '../../chunks/db_DpmQIvvC.mjs';
 export { renderers } from '../../renderers.mjs';
 
 var __freeze = Object.freeze;

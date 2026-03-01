@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { r as readContentFromStorage, s as saveContentToStorage } from '../../chunks/cms-storage_CYJW-R64.mjs';
+import { r as readContentFromStorage, s as saveContentToStorage } from '../../chunks/cms-storage_7ZxVS-RI.mjs';
 export { renderers } from '../../renderers.mjs';
 
 const objectSchema = z.record(z.any());
