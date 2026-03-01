@@ -131,21 +131,40 @@ async function saveOuterPreviewPreference() {
 }
 
 async function api(path, options = {}) {
-  const headers = { ...(options.headers || {}) };
-  if (authToken && !headers.Authorization && path !== '/api/admin/login') headers.Authorization = `Bearer ${authToken}`;
-  if (options.body && !headers['Content-Type']) headers['Content-Type'] = 'application/json';
-
   const method = (options.method || 'GET').toUpperCase();
-  if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(method) && path.startsWith('/api/admin/') && path !== '/api/admin/login') {
-    if (!csrfToken) await refreshCsrf();
-    if (!csrfToken) throw new Error('CSRF Token fehlt. Bitte neu einloggen.');
-    headers['x-csrf-token'] = csrfToken;
-  }
+  const requestOnce = async (requestPath) => {
+    const headers = { ...(options.headers || {}) };
+    if (authToken && !headers.Authorization && requestPath !== '/api/admin/login' && requestPath !== '/api/admin/login/') {
+      headers.Authorization = `Bearer ${authToken}`;
+    }
+    if (options.body && !headers['Content-Type']) headers['Content-Type'] = 'application/json';
 
-  const res = await fetch(path, { ...options, headers, credentials: 'same-origin' });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.error || `API ${res.status}`);
-  return data;
+    if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(method) && requestPath.startsWith('/api/admin/') && requestPath !== '/api/admin/login' && requestPath !== '/api/admin/login/') {
+      if (!csrfToken) await refreshCsrf();
+      if (!csrfToken) throw new Error('CSRF Token fehlt. Bitte neu einloggen.');
+      headers['x-csrf-token'] = csrfToken;
+    }
+
+    const res = await fetch(requestPath, { ...options, headers, credentials: 'same-origin' });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const err = new Error(data.error || `API ${res.status}`);
+      err.status = res.status;
+      throw err;
+    }
+    return data;
+  };
+
+  try {
+    return await requestOnce(path);
+  } catch (error) {
+    const shouldRetryWithSlash =
+      path.startsWith('/api/admin/') &&
+      !path.endsWith('/') &&
+      Number(error?.status || 0) === 404;
+    if (!shouldRetryWithSlash) throw error;
+    return requestOnce(`${path}/`);
+  }
 }
 
 async function refreshCsrf() {
