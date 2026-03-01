@@ -1,6 +1,7 @@
 node_modules
 .astro
 .next
+.vercel
 apps/cms/.next
 apps/cms/node_modules
 dist
