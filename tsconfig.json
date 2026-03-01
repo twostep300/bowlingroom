@@ -7,5 +7,12 @@
       "@/lib/*": ["src/lib/*"],
       "@/types/*": ["src/types/*"]
     }
-  }
+  },
+  "exclude": [
+    "apps",
+    "heyreply-standalone",
+    ".vercel",
+    "dist",
+    "node_modules"
+  ]
 }
