@@ -51,7 +51,7 @@
         "text": "Unbegrenzte Hotdogs, Drinks und Bowling-Action. Perfekt für den Abend mit deiner Crew.",
         "cta": "Jetzt reservieren",
         "href": "/locations/koblenz/reservieren",
-        "image": "https://images.unsplash.com/photo-1619740455993-c3379db61f01?q=80&w=2070&auto=format&fit=crop"
+        "image": "https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?q=80&w=2070&auto=format&fit=crop"
       },
       {
         "date": "21. März 2026",
@@ -338,7 +338,7 @@
     "profile": "https://www.instagram.com/bowling_room/",
     "posts": [
       {
-        "image": "https://images.unsplash.com/photo-1544178170-c9716719810a?q=80&w=2070&auto=format&fit=crop",
+        "image": "https://images.unsplash.com/photo-1498654896293-37aacf113fd9?q=80&w=2070&auto=format&fit=crop",
         "likes": "842",
         "comments": "24",
         "text": "Der perfekte Strike am Samstagabend!"
@@ -512,7 +512,7 @@
         "subtitle": "Unbegrenzte Hotdogs und Entertainment.",
         "startTime": "18:00",
         "endTime": "22:00",
-        "image": "https://images.unsplash.com/photo-1619740455993-c3379db61f01?q=80&w=2070&auto=format&fit=crop",
+        "image": "https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?q=80&w=2070&auto=format&fit=crop",
         "ctaLabel": "Event reservieren",
         "ctaHref": "/locations/koblenz/reservieren",
         "highlight": true

@@ -52,6 +52,20 @@ const FORCE_LOCAL_ADMIN = ['localhost', '127.0.0.1'].includes(window.location.ho
 let outerPreviewEnabled = true;
 
 const el = (id) => document.getElementById(id);
+function showLogin() {
+  const wrap = el('loginWrap');
+  if (!wrap) return;
+  wrap.classList.remove('hidden');
+  wrap.style.display = 'flex';
+}
+
+function hideLogin() {
+  const wrap = el('loginWrap');
+  if (!wrap) return;
+  wrap.classList.add('hidden');
+  wrap.style.display = 'none';
+}
+
 function setStatus(msg, isError = false) {
   const s = el('status');
   s.textContent = msg || '';
@@ -118,7 +132,7 @@ async function saveOuterPreviewPreference() {
 
 async function api(path, options = {}) {
   const headers = { ...(options.headers || {}) };
-  if (authToken && !headers.Authorization) headers.Authorization = `Bearer ${authToken}`;
+  if (authToken && !headers.Authorization && path !== '/api/admin/login') headers.Authorization = `Bearer ${authToken}`;
   if (options.body && !headers['Content-Type']) headers['Content-Type'] = 'application/json';
 
   const method = (options.method || 'GET').toUpperCase();
@@ -1059,22 +1073,22 @@ async function renderModule() {
 
 async function ensureAuth() {
   if (FORCE_LOCAL_ADMIN) {
-    el('loginWrap').classList.add('hidden');
+    hideLogin();
     return true;
   }
   try {
     await api('/api/admin/me');
-    el('loginWrap').classList.add('hidden');
+    hideLogin();
     return true;
   } catch {
-    el('loginWrap').classList.remove('hidden');
+    showLogin();
     return false;
   }
 }
 
 async function performLogin() {
   if (FORCE_LOCAL_ADMIN) {
-    el('loginWrap').classList.add('hidden');
+    hideLogin();
     await refreshCsrf();
     await renderModule();
     return;
@@ -1093,7 +1107,7 @@ async function performLogin() {
     }
     await refreshCsrf();
     if (!csrfToken) throw new Error('Login erfolgreich, aber CSRF-Token fehlt. Seite neu laden.');
-    el('loginWrap').classList.add('hidden');
+    hideLogin();
     setLoginStatus('');
     await renderModule();
   } catch (e) {
@@ -1124,7 +1138,7 @@ async function tryLocalAutoLogin() {
 
 async function boot() {
   if (FORCE_LOCAL_ADMIN) {
-    el('loginWrap').classList.add('hidden');
+    hideLogin();
     setLoginStatus('');
   }
   renderMenu();
@@ -1188,13 +1202,13 @@ async function boot() {
       el('loginEmail').focus();
       return;
     }
-    el('loginWrap').classList.add('hidden');
+    hideLogin();
     setLoginStatus('');
     await renderModule();
     return;
   }
   await refreshCsrf();
-  if (FORCE_LOCAL_ADMIN) el('loginWrap').classList.add('hidden');
+  if (FORCE_LOCAL_ADMIN) hideLogin();
   await renderModule();
 }
 
