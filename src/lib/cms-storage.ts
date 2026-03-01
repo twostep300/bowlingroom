@@ -59,6 +59,10 @@ export async function listPagesFromStorage() {
 
   const storage = mode();
   if (storage === 'file') return listFilePages();
+  if (storage === 'hybrid') {
+    const filePages = listFilePages();
+    if (filePages.length > 0) return filePages;
+  }
 
   try {
     const pages = await db.contentPage.findMany({ select: { slug: true }, orderBy: { slug: 'asc' } });
@@ -80,6 +84,10 @@ export async function readContentFromStorage(slug: string): Promise<CmsObject | 
   }
 
   const storage = mode();
+  if (storage === 'hybrid' && filePageExists(slug)) {
+    return readFileContent(slug);
+  }
+
   if (storage !== 'file') {
     try {
       const page = await ensurePageFromFile(slug);

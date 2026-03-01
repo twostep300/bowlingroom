@@ -42,6 +42,11 @@ export async function getCmsRuntimeConfig(options: { forceRefresh?: boolean } = 
   if (!options.forceRefresh && cache && cache.expiresAt > now) return cache.value;
 
   const envConfig = readCmsRuntimeFromEnv();
+  if (process.env.VERCEL || process.env.CMS_RUNTIME_SOURCE === 'env-only') {
+    cache = { value: envConfig, expiresAt: now + 4000 };
+    return envConfig;
+  }
+
   try {
     const rows = await db.siteSetting.findMany({
       where: { key: { in: ['cms.platform', 'cms.payloadReadMode'] } }
