@@ -8,9 +8,15 @@ function sessionCookieName(): string {
 }
 
 function isLocalBypassAllowed(context: APIContext): boolean {
-  const host = context.url.hostname;
-  const isLocal = host === 'localhost' || host === '127.0.0.1';
-  const isVercelPreview = host.endsWith('.vercel.app');
+  const headerHost =
+    context.request.headers.get('x-forwarded-host') ||
+    context.request.headers.get('host') ||
+    '';
+  const effectiveHost = (headerHost || context.url.hostname || '').toLowerCase();
+  const isLocal = effectiveHost === 'localhost' || effectiveHost === '127.0.0.1';
+  const isVercelPreview =
+    effectiveHost.endsWith('.vercel.app') ||
+    Boolean(process.env.VERCEL);
 
   if (isLocal) {
     if (process.env.NODE_ENV === 'production') return false;
