@@ -48,7 +48,7 @@ let csrfToken = '';
 let authToken = localStorage.getItem('br_admin_token') || '';
 let pageKeys = [];
 let currentPage = 'koblenz';
-const FORCE_LOCAL_ADMIN = true;
+const FORCE_LOCAL_ADMIN = ['localhost', '127.0.0.1'].includes(window.location.hostname);
 let outerPreviewEnabled = true;
 
 const el = (id) => document.getElementById(id);

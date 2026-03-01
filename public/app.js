@@ -15,7 +15,13 @@ function setHref(id, value) {
 
 function setSrc(id, value) {
   const el = document.getElementById(id);
-  if (el) el.src = value || '';
+  if (!el) return;
+  const nextSrc = normalizeImageUrl(value);
+  el.onerror = () => {
+    el.onerror = null;
+    el.src = FALLBACK_EVENT_IMAGE;
+  };
+  el.src = nextSrc;
 }
 
 function isSectionVisible(value) {
@@ -164,7 +170,7 @@ function renderMarketingBar(marketingBar) {
   `;
 }
 
-const FALLBACK_EVENT_IMAGE = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'><defs><linearGradient id='g' x1='0' x2='1' y1='0' y2='1'><stop stop-color='%23111111' offset='0'/><stop stop-color='%23FF3E00' offset='1'/></linearGradient></defs><rect width='1200' height='800' fill='url(%23g)'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='white' font-size='54' font-family='Arial'>Event Bild</text></svg>";
+const FALLBACK_EVENT_IMAGE = `data:image/svg+xml;utf8,${encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'><defs><linearGradient id='g' x1='0' x2='1' y1='0' y2='1'><stop stop-color='#111111' offset='0'/><stop stop-color='#FF3E00' offset='1'/></linearGradient></defs><rect width='1200' height='800' fill='url(#g)'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='white' font-size='54' font-family='Arial'>Event Bild</text></svg>")}`;
 function normalizeImageUrl(url) {
   if (!url || typeof url !== 'string') return FALLBACK_EVENT_IMAGE;
   const trimmed = url.trim();
@@ -832,7 +838,7 @@ function renderPage(data) {
   setText('about-text', data.about?.text);
   document.getElementById('about-cards').innerHTML = (data.about?.cards || []).map((card) => `
     <div class="group relative aspect-video overflow-hidden bg-zinc-900 skew-hover cursor-pointer">
-      <img src="${card.image}" class="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity" alt="${card.title}">
+        <img src="${normalizeImageUrl(card.image)}" class="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity" alt="${card.title}" onerror="this.onerror=null;this.src='${FALLBACK_EVENT_IMAGE}'">
       <div class="absolute inset-0 p-8 flex flex-col justify-between">
         <iconify-icon icon="${card.icon}" class="text-4xl text-[#FF3E00]"></iconify-icon>
         <div>
@@ -931,7 +937,7 @@ function renderPage(data) {
 
   document.getElementById('insta-grid').innerHTML = (data.instagram?.posts || []).map((post) => `
     <div class="relative group aspect-square overflow-hidden bg-zinc-900">
-      <img src="${post.image}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100" alt="Instagram Post">
+      <img src="${normalizeImageUrl(post.image)}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100" alt="Instagram Post" onerror="this.onerror=null;this.src='${FALLBACK_EVENT_IMAGE}'">
       <div class="absolute inset-0 bg-[#FF3E00]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       <div class="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
         <iconify-icon icon="mdi:instagram" class="text-white text-5xl mb-4"></iconify-icon>
