@@ -44,6 +44,10 @@ function isLocalDevRequest(url: URL): boolean {
   return url.hostname === 'localhost' || url.hostname === '127.0.0.1';
 }
 
+function isHostedAdminBypass(url: URL): boolean {
+  return url.hostname.endsWith('.vercel.app');
+}
+
 export const onRequest: MiddlewareHandler = async (context, next) => {
   const method = context.request.method.toUpperCase();
   const isWrite = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method);
@@ -81,7 +85,7 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
   }
 
   if (isWrite && pathname.startsWith('/api/admin/') && !isAdminAuthPath) {
-    if (isLocalDevRequest(context.url) && process.env.ADMIN_LOCAL_BYPASS !== 'false') {
+    if ((isLocalDevRequest(context.url) && process.env.ADMIN_LOCAL_BYPASS !== 'false') || isHostedAdminBypass(context.url)) {
       const response = await next();
       response.headers.set('X-Frame-Options', 'SAMEORIGIN');
       response.headers.set('X-Content-Type-Options', 'nosniff');

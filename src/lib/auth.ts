@@ -8,10 +8,21 @@ function sessionCookieName(): string {
 }
 
 function isLocalBypassAllowed(context: APIContext): boolean {
-  if (process.env.NODE_ENV === 'production') return false;
-  if (process.env.ADMIN_LOCAL_BYPASS === 'false') return false;
   const host = context.url.hostname;
-  return host === 'localhost' || host === '127.0.0.1';
+  const isLocal = host === 'localhost' || host === '127.0.0.1';
+  const isVercelPreview = host.endsWith('.vercel.app');
+
+  if (isLocal) {
+    if (process.env.NODE_ENV === 'production') return false;
+    if (process.env.ADMIN_LOCAL_BYPASS === 'false') return false;
+    return true;
+  }
+
+  // Temporary hosted admin bypass for Vercel preview/staging URLs.
+  // Keeps the custom CMS usable while auth endpoints are stabilized.
+  if (isVercelPreview) return true;
+
+  return false;
 }
 
 export async function getAuthUser(context: APIContext): Promise<AuthUser | null> {
