@@ -48,7 +48,11 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
   const method = context.request.method.toUpperCase();
   const isWrite = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method);
   const pathname = context.url.pathname;
-  const isAdminLoginPath = pathname === '/api/admin/login' || pathname === '/api/admin/login/';
+  const isAdminAuthPath =
+    pathname === '/api/admin/login' ||
+    pathname === '/api/admin/login/' ||
+    pathname === '/api/admin/session' ||
+    pathname === '/api/admin/session/';
 
   if (method === 'GET' && !pathname.startsWith('/api/')) {
     const redirects = await getActiveRedirects();
@@ -59,7 +63,7 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
     }
   }
 
-  if (isWrite && pathname.startsWith('/api/') && !isAdminLoginPath) {
+  if (isWrite && pathname.startsWith('/api/') && !isAdminAuthPath) {
     if (!isLocalDevRequest(context.url)) {
     const origin = context.request.headers.get('origin');
     if (origin) {
@@ -74,7 +78,7 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
     }
   }
 
-  if (isWrite && pathname.startsWith('/api/admin/') && !isAdminLoginPath) {
+  if (isWrite && pathname.startsWith('/api/admin/') && !isAdminAuthPath) {
     if (isLocalDevRequest(context.url) && process.env.ADMIN_LOCAL_BYPASS !== 'false') {
       const response = await next();
       response.headers.set('X-Frame-Options', 'SAMEORIGIN');

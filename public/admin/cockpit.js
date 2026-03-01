@@ -42,6 +42,7 @@ const moduleGroups = [
 ];
 
 const modules = moduleGroups.flatMap((group) => group.modules);
+const ADMIN_LOGIN_ENDPOINT = '/api/admin/session';
 
 let activeModule = 'builder';
 let csrfToken = '';
@@ -64,6 +65,10 @@ function hideLogin() {
   if (!wrap) return;
   wrap.classList.add('hidden');
   wrap.style.display = 'none';
+}
+
+function isAuthEndpoint(path) {
+  return path === '/api/admin/login' || path === '/api/admin/login/' || path === '/api/admin/session' || path === '/api/admin/session/';
 }
 
 function setStatus(msg, isError = false) {
@@ -134,12 +139,12 @@ async function api(path, options = {}) {
   const method = (options.method || 'GET').toUpperCase();
   const requestOnce = async (requestPath) => {
     const headers = { ...(options.headers || {}) };
-    if (authToken && !headers.Authorization && requestPath !== '/api/admin/login' && requestPath !== '/api/admin/login/') {
+    if (authToken && !headers.Authorization && !isAuthEndpoint(requestPath)) {
       headers.Authorization = `Bearer ${authToken}`;
     }
     if (options.body && !headers['Content-Type']) headers['Content-Type'] = 'application/json';
 
-    if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(method) && requestPath.startsWith('/api/admin/') && requestPath !== '/api/admin/login' && requestPath !== '/api/admin/login/') {
+    if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(method) && requestPath.startsWith('/api/admin/') && !isAuthEndpoint(requestPath)) {
       if (!csrfToken) await refreshCsrf();
       if (!csrfToken) throw new Error('CSRF Token fehlt. Bitte neu einloggen.');
       headers['x-csrf-token'] = csrfToken;
@@ -1116,7 +1121,7 @@ async function performLogin() {
   btn.disabled = true;
   setLoginStatus('Einloggen ...');
   try {
-    const loginResult = await api('/api/admin/login', {
+    const loginResult = await api(ADMIN_LOGIN_ENDPOINT, {
       method: 'POST',
       body: JSON.stringify({ email: el('loginEmail').value, password: el('loginPassword').value })
     });
@@ -1140,7 +1145,7 @@ async function tryLocalAutoLogin() {
   const isLocal = FORCE_LOCAL_ADMIN;
   if (!isLocal) return false;
   try {
-    const loginResult = await api('/api/admin/login', {
+    const loginResult = await api(ADMIN_LOGIN_ENDPOINT, {
       method: 'POST',
       body: JSON.stringify({ email: 'admin@bowlingroom.local', password: 'ChangeMe123!' })
     });
